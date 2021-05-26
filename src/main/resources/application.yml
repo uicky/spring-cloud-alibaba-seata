@@ -1,0 +1,53 @@
+server:
+  port: 8888
+spring:
+  application:
+    name: spring-cloud-alibaba-seata
+  datasource:
+    # 多数据源配置
+    dynamic:
+      datasource:
+        account_ds:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          password: root
+          url: jdbc:mysql://127.0.0.1:3306/account_ds?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useSSL=false
+          username: root
+        order_ds:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          password: root
+          url: jdbc:mysql://127.0.0.1:3306/order_ds?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useSSL=false
+          username: root
+        product_ds:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          password: root
+          url: jdbc:mysql://127.0.0.1:3306/product_ds?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useSSL=false
+          username: root
+      primary: order_ds
+      # 开启分布式事务
+      seata: true
+      # 分布式事务模式
+      seata-mode: at
+# 分布式事务配置
+seata:
+  application-id: ${spring.application.name}
+  enable-auto-data-source-proxy: false
+  registry:
+    nacos:
+      application: seata-server
+      cluster: default
+      group: SEATA_GROUP
+      server-addr: 127.0.0.1:8848
+    type: nacos
+  service:
+    vgroup-mapping:
+      my_test_tx_group: default
+  tx-service-group: my_test_tx_group
+
+# mybatis-plus 配置文件
+mybatis-plus:
+  mapper-locations: classpath:com/westarsoft/springcloudalibabaseata/mapper/xml/*.xml
+  type-aliases-package: com.westarsoft.springcloudalibabaseata.model
+  configuration:
+    map-underscore-to-camel-case: true
+
+
